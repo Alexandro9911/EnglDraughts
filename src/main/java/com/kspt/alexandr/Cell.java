@@ -16,7 +16,9 @@ public final class Cell {
     public int getY() {
         return y;
     }
-
+    Cell plus(Cell other) {
+        return new Cell(x + other.x,y + other.y);
+    }
     @Override
     public boolean equals(Object other) {
         if (this == other) return true;

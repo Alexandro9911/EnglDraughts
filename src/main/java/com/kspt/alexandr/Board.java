@@ -20,7 +20,7 @@ public class Board {
 
     public Board(int width, int height) {
         this.width = width;
-        this.height =  height;
+        this.height = height;
     }
 
     public Board() {
@@ -58,6 +58,72 @@ public class Board {
         }
         return answ;
     }
+
+    public void eatInThisCell(Cell cellToEat) {
+
+    }
+
+    public void eat(Cell eater) {
+
+    }
+
+    public boolean canEat(Cell currChip) {
+        boolean answ = false;
+
+        return answ;
+    }
+
+
+    public void makeQueen(Cell current) {
+
+    }
+
+    public void go(Cell cell, Enum dir) {
+
+    }
+
+    private boolean canGo(Cell current) {
+        boolean answ = false;
+        for (Cell direction : DIRECTIONS) {
+            Cell next = current.plus(direction);
+            if (!chips.containsKey(next)) {
+                if (get(current) == Chip.GREEN && (direction == DIRECTIONS[0] || direction == DIRECTIONS[1])) {
+                    answ = true;
+                }
+                if (get(current) == Chip.RED && (direction == DIRECTIONS[3] || direction == DIRECTIONS[2])) {
+                    answ = true;
+                }
+            }
+
+        }
+        return answ;
+    }
+
+    public Cell checkEater() {
+        boolean answ = false;
+        Cell missedEater = new Cell(100, 100);
+        for (int x = 0; x < width; x++) {
+            for (int y = 0; y < height; y++) {
+                Cell cell = new Cell(x, y);
+                if (canEat(cell)) {
+                    answ = true;
+                    missedEater = cell;
+                    break;
+                }
+            }
+            if (!answ) {
+                break;
+            }
+        }
+        return missedEater;
+    }
+
+    public void eatMissEater(Cell cell) {
+        if (cell.equals(checkEater())) {
+            eat(cell);
+        }
+    }
+
 
     String checkWinner() {
         int greenCount = 0;
