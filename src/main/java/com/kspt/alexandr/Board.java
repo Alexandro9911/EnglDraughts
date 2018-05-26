@@ -59,30 +59,86 @@ public class Board {
         return answ;
     }
 
-    public void eatInThisCell(Cell cellToEat) {
+    /*  public void EatInDirect(Cell currCell, Cell objectOfEating) {
+          Chip currChip = get(currCell);
+          Chip eatingChip = get(objectOfEating);
+          Cell direction = getDirection(currCell, objectOfEating);
+          Cell end = new Cell(2*direction.getX(), 2*direction.getY());
+          if(hasEnemy(currCell, direction) && canGoInDir(currCell, end)){
+              chips.remove(objectOfEating);
+              objectOfEating = null;
+              Chip newChip = get(end);
+              newChip = currChip;
 
-    }
-
-    public void eat(Cell eater) {
-
-    }
-
-    public boolean canEat(Cell currChip) {
-        boolean answ = false;
-
+          }
+      }
+   */
+    public Cell getDirection(Cell start, Cell end) {
+        Cell answ = new Cell(0, 0);
+        int dirX = end.getX() - start.getX();
+        int dirY = end.getY() - start.getY();
+        Cell dir = new Cell(dirX, dirY);
+        if (checkVectorDir(dir)) {
+            answ = dir;
+        }
         return answ;
     }
 
+    public boolean canEat(Cell currCell) {
+        boolean answ = false;
+        for (Cell direction : DIRECTIONS) {
+            Cell end = new Cell(2 * direction.getX(), 2 * direction.getY());
+            if (!chips.containsKey(end) && (hasEnemy(currCell, direction))) {
+                answ = true;
+                break;
+            }
+        }
+        return answ;
+    }
+
+    private boolean hasEnemy(Cell currCell, Cell dir) {
+        boolean answ = false;
+        Chip currChip = get(currCell);
+        for (Cell direction : DIRECTIONS) {
+            Chip potencialEnemy = get(direction);
+            if (currChip != potencialEnemy) {
+                answ = true;
+                break;
+            }
+        }
+        return answ;
+    }
 
     public void makeQueen(Cell current) {
-
+        Chip chip = get(current);
+        int x = current.getX();
+        int y = current.getY();
+        if (chip == Chip.GREEN && y == 8) {
+            chip = Chip.GREENQUEEN;
+        } else {
+            if (chip == Chip.RED && y == 1) {
+                chip = Chip.REDQUEEN;
+            }
+        }
     }
 
-    public void go(Cell cell, Enum dir) {
+  /*  public void go(Cell curr, Cell dir) {
+        if (canGoinGeneral(curr)) {
+            Cell next = curr.plus(dir);
+            Chip chip = get(curr);
+            newChip = currChip;
+            chips.remove(curr);
+            curr = null;
+        }
+    } */
 
+    public boolean canGoInDir(Cell current, Cell dir) {
+        boolean answ = false;
+        Cell next = current.plus(dir);
+        return answ;
     }
 
-    private boolean canGo(Cell current) {
+    private boolean canGoinGeneral(Cell current) {
         boolean answ = false;
         for (Cell direction : DIRECTIONS) {
             Cell next = current.plus(direction);
@@ -120,7 +176,8 @@ public class Board {
 
     public void eatMissEater(Cell cell) {
         if (cell.equals(checkEater())) {
-            eat(cell);
+            chips.remove(cell);
+            cell = null;
         }
     }
 
@@ -141,10 +198,20 @@ public class Board {
         else return "Winner: Red player";
     }
 
+    private boolean checkVectorDir(Cell dir) {
+        boolean answ = false;
+        for (Cell direction : DIRECTIONS) {
+            if (dir.equals(direction)) {
+                answ = true;
+                break;
+            }
+        }
+        return answ;
+    }
 
     static private final Cell[] DIRECTIONS = new Cell[]{
-            new Cell(1, 1), new Cell(1, -1),
-            new Cell(1, -1), new Cell(-1, -1)
+            new Cell(-1, 1), new Cell(1, 1),
+            new Cell(-1, -1), new Cell(1, -1)
     };
 
     public int getWidth() {
