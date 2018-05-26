@@ -15,7 +15,7 @@ public class Board {
     private final int height;
 
     @NotNull
-    private final Map<Cell, Chip> chips = new HashMap<Cell, Chip>();
+    public final Map<Cell, Chip> chips = new HashMap<Cell, Chip>();
 
 
     public Board(int width, int height) {
@@ -37,42 +37,20 @@ public class Board {
         return chips.get(cell);
     }
 
-    public boolean hasFreeCells() {
-        for (int x = 0; x < width; x++) {
-            for (int y = 0; y < height; y++) {
-                if (get(x, y) == null) return true;
-            }
+    public void EatInDirect(Cell currCell, Cell objectOfEating) {
+        Chip currChip = get(currCell);
+        Chip eatingChip = get(objectOfEating);
+        Cell direction = getDirection(currCell, objectOfEating);
+        Cell end = new Cell(2 * direction.getX(), 2 * direction.getY());
+        System.out.println(canGoInDir(currCell, end));
+        if (hasEnemy(currCell, direction) && canGoInDir(currCell, end)) {
+            chips.remove(objectOfEating);
+            objectOfEating = null;
+            Chip newChip = get(end);
+            newChip = currChip;
         }
-        return false;
     }
 
-    public List<Cell> listCellsWithChip() {
-        List<Cell> answ = new ArrayList<Cell>();
-        for (int x = 0; x < width; x++) {
-            for (int y = 0; y < height; y++) {
-                if (get(x, y) != null) {
-                    Cell cell = new Cell(x, y);
-                    answ.add(cell);
-                }
-            }
-        }
-        return answ;
-    }
-
-    /*  public void EatInDirect(Cell currCell, Cell objectOfEating) {
-          Chip currChip = get(currCell);
-          Chip eatingChip = get(objectOfEating);
-          Cell direction = getDirection(currCell, objectOfEating);
-          Cell end = new Cell(2*direction.getX(), 2*direction.getY());
-          if(hasEnemy(currCell, direction) && canGoInDir(currCell, end)){
-              chips.remove(objectOfEating);
-              objectOfEating = null;
-              Chip newChip = get(end);
-              newChip = currChip;
-
-          }
-      }
-   */
     public Cell getDirection(Cell start, Cell end) {
         Cell answ = new Cell(0, 0);
         int dirX = end.getX() - start.getX();
@@ -122,19 +100,22 @@ public class Board {
         }
     }
 
-  /*  public void go(Cell curr, Cell dir) {
-        if (canGoinGeneral(curr)) {
-            Cell next = curr.plus(dir);
+    public void go(Cell curr, Cell dir) {
+        if (canGoInDir(curr, dir)) {
             Chip chip = get(curr);
-            newChip = currChip;
+            Cell newCell = curr.plus(dir);
             chips.remove(curr);
             curr = null;
+            chips.put(newCell, chip);
         }
-    } */
+    }
 
     public boolean canGoInDir(Cell current, Cell dir) {
         boolean answ = false;
         Cell next = current.plus(dir);
+        if (!chips.containsKey(next)) {
+            answ = true;
+        }
         return answ;
     }
 
@@ -151,6 +132,39 @@ public class Board {
                 }
             }
 
+        }
+        return answ;
+    }
+
+    public boolean checkQueen(Cell cell) {
+        boolean answ = false;
+        Chip chip = get(cell);
+        if (chip == Chip.GREENQUEEN || chip == Chip.REDQUEEN) {
+            answ = true;
+        }
+        return answ;
+    }
+
+    public void queenGo(Cell curr, Cell dir) {
+        if (checkQueen(curr)) {
+            Cell next = curr.plus(dir);
+            Chip chip = get(curr);
+            if (!chips.containsKey(next)) {
+                chips.remove(curr);
+                curr = null;
+                chips.put(next, chip);
+            }
+        }
+    }
+
+    public boolean canQueenGo(Cell curr) {
+        boolean answ = false;
+        if (!checkQueen(curr)) return false;
+        for (Cell direction : DIRECTIONS) {
+            Cell potencialCell = curr.plus(direction);
+            if (!chips.containsKey(potencialCell)) {
+                answ = true;
+            }
         }
         return answ;
     }
@@ -220,6 +234,33 @@ public class Board {
 
     public int getHeight() {
         return height;
+    }
+    public void startGame(){
+        chips.put(new Cell(1,7), Chip.RED);
+        chips.put(new Cell(3,7), Chip.RED);
+        chips.put(new Cell(5,7), Chip.RED);
+        chips.put(new Cell(7,7), Chip.RED);
+        chips.put(new Cell(0,6), Chip.RED);
+        chips.put(new Cell(2,6), Chip.RED);
+        chips.put(new Cell(4,6), Chip.RED);
+        chips.put(new Cell(6,6), Chip.RED);
+        chips.put(new Cell(1,5), Chip.RED);
+        chips.put(new Cell(3,5), Chip.RED);
+        chips.put(new Cell(5,5), Chip.RED);
+        chips.put(new Cell(7,5), Chip.RED);
+
+        chips.put(new Cell(0,2), Chip.GREEN);
+        chips.put(new Cell(2,2), Chip.GREEN);
+        chips.put(new Cell(4,2), Chip.GREEN);
+        chips.put(new Cell(6,2), Chip.GREEN);
+        chips.put(new Cell(1,1), Chip.GREEN);
+        chips.put(new Cell(3,1), Chip.GREEN);
+        chips.put(new Cell(5,1), Chip.GREEN);
+        chips.put(new Cell(7,1), Chip.GREEN);
+        chips.put(new Cell(0,0), Chip.GREEN);
+        chips.put(new Cell(2,0), Chip.GREEN);
+        chips.put(new Cell(4,0), Chip.GREEN);
+        chips.put(new Cell(6,0), Chip.GREEN);
     }
 }
 
