@@ -19,6 +19,9 @@ public final class Cell {
     Cell plus(Cell other) {
         return new Cell(x + other.x,y + other.y);
     }
+    Cell plus2(Cell dir){
+        return new Cell(x+ 2*dir.x, y + 2 * dir.y);
+    }
 
     @Override
     public boolean equals(Object other) {
