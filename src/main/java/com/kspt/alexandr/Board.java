@@ -206,14 +206,15 @@ public class Board {
         int redCount = 0;
         for (int x = 0; x < width; x++) {
             for (int y = 0; y < height; y++) {
-                if (get(x, y) == Chip.GREEN) {
+                if (get(x, y) == Chip.GREEN || get(x, y) == Chip.GREENQUEEN) {
                     greenCount++;
                 } else {
+                    if(get(x, y) == Chip.RED || get(x, y) == Chip.REDQUEEN)
                     redCount++;
                 }
             }
         }
-        if (redCount > greenCount) return "Winner: Green player";
+        if (redCount < greenCount) return "Winner: Green player";
         else return "Winner: Red player";
     }
 

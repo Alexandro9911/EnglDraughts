@@ -2,8 +2,6 @@ package com.kspt.alexandr;
 
 import org.junit.Test;
 
-import java.util.Set;
-
 import static org.junit.Assert.*;
 
 public class BoardTest {
@@ -144,6 +142,19 @@ public class BoardTest {
         board.chips.put(green2, Chip.GREEN);
         board.eatMissEater(board.checkEater());
         assertEquals(false, board.chips.containsValue(board.get(green2)));
+    }
+    @Test
+    public void checkWinnerTest(){
+        Board board = new Board();
+        board.chips.put(new Cell(1, 7), Chip.RED);
+        board.chips.put(new Cell(3, 7), Chip.RED);
+        board.chips.put(new Cell(5, 7), Chip.RED);
+        board.chips.put(new Cell(7, 7), Chip.REDQUEEN);
+        board.chips.put(new Cell(0, 2), Chip.GREEN);
+        board.chips.put(new Cell(2, 2), Chip.GREEN);
+        board.chips.put(new Cell(4, 2), Chip.GREEN);
+        String res = board.checkWinner();
+        assertEquals("Winner: Red player", res);
     }
 
     @Test
